@@ -182,10 +182,18 @@ Private Sub getSeriesRange()
         End If
     End If
     
+    Dim isHidden As Boolean
     For Each ocell In dbRefreshRange.Cells
         If (isRow And ocell.Row <> rRequired.Item(whichDatabase).Cells(1, 1).Row) Or (Not isRow And ocell.Column <> rRequired.Item(whichDatabase).Cells(1, 1).Column) Then
-            unionOr seriesRange, ocell.Offset(srowoffset, scoloffset)
-            unionOr resourceRange, ocell
+            If isRow Then
+                isHidden = ocell.EntireRow.Hidden
+            Else
+                isHidden = ocell.EntireColumn.Hidden
+            End If
+            If Not isHidden Then
+                unionOr seriesRange, ocell.Offset(srowoffset, scoloffset)
+                unionOr resourceRange, ocell
+            End If
         End If
     Next ocell
 End Sub
